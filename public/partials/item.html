@@ -1,0 +1,58 @@
+<!-- item.html is the html content delivered to students when they click 'view question' -->
+<!-- it renders either the question or the result determined by the bool que.userAnswd -->
+
+<!-- Twitter's bootstrap page header -->
+<div class="page-header">
+  <h1>View Question</h1>
+</div>
+
+<!-- Uses bootstrap class to appear 'sunken' into page (less visible) -->
+<div class="well well-lg">
+  <strong>Question</strong><br>{{question.question}}
+</div>
+
+<!-- Renders question -->
+<div ng-hide="question.userresponsed">
+  <p class="lead">Please select one of the following options</p>
+  <form role="form" ng-submit="response()">
+    <div ng-repeat="choice in question.choices" class="radio">
+      <label>
+        <input type="radio", name="choice" ng-model="question.userresponse" value="{{choice._id}}">
+        {{choice.text}}
+      </label>
+    </div>
+    <p><hr></p>
+    <div class="row">
+      <div class="col-xs-6">
+        <a href="#/questions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span> Back to Question</a>
+      </div>
+      <div class="col-xs-6">
+        <button class="btn btn-primary pull-right" type="submit"> Submit &raquo;</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Renders correct result -->
+<div ng-show="question.userresponsed">
+  <table class="result-table">
+    <tbody>
+      <tr ng-repeat="choice in question.choices">
+        <td>{{choice.text}}</td>
+        <td>
+          <table style="width: {{choice.responses.length/question.totalresponses * 100}}%;">
+            <tr>
+              <td>{{choice.responses.length}}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p><em>{{question.totalresponses}} responses counted so far. <span ng-show="question.userChoice">You submitted <strong>{{question.userChoice.text}}</strong></span></em></p>
+  <p><hr></p>
+  <p><a href="#/questions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span>Back to Question List</a></p>
+</div>
+<p>&nbsp;</p>
+
+<!-- Copyright 2014 Nick Gallimore, all rights reserved. -->
