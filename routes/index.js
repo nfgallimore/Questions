@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var db = mongoose.createConnection('localhost', 'questionsapp');
+var db = mongoose.createConnection(MONGOLAB_URI);
 var QuestionSchema = require('../models/Question.js').QuestionSchema;
 var Question = db.model('questions', QuestionSchema);
 
