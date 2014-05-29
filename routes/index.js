@@ -1,11 +1,8 @@
 var mongoose = require('mongoose');
-var db = mongoose.createConnection("mongodb://heroku_app25570769:q59d9o89lf3lb9g35bd92kbjtc@ds051788.mongolab.com:51788/heroku_app25570769");
+var credentials = 'mongodb://nfgallimore:Dax82wur@ds033639.mongolab.com:33639/heroku_app25784365';
+var db = mongoose.createConnection(credentials);
 var QuestionSchema = require('../models/Question.js').QuestionSchema;
 var Question = db.model('questions', QuestionSchema);
-
-exports.index = function(req, res) {
-  res.render('index', {title: 'Questions'});
-};
 
 // JSON API for list of questions
 exports.list = function(req, res) {
@@ -61,48 +58,82 @@ exports.question = function(req, res)
 };
 
 // JSON API for creating a new question
-exports.create = function(req, res) {
-  var reqBody = req.body,
-    choices = reqBody.choices.filter(function(v){return v.text != '';}),
-    questionObj = {question: reqBody.question, choices: choices};
-  var question = new Question(questionObj);
-  question.save(function(err, doc){
-    if(err || !doc){
-      throw 'Error';
-    }
-    else {
-      res.json(doc);
-    }
-  });
+exports.create = function(req, res)
+{
+	var reqBody = 
+		
+		// body
+		req.body,
+		
+		// choices
+		choices = reqBody.choices.filter( function(v) { return v.text !== ''; } ),
+	    
+		// question object
+		questionObj =
+	    {
+			question: reqBody.question,
+			choices: choices
+		};
+	
+		// question
+		var question = new Question(questionObj);
+		
+		// 
+		question.save(function(err, doc)
+		{
+			if(err || !doc)
+			{
+				throw 'Error';
+			}
+			else
+			{
+				res.json(doc);
+			}
+		});
 };
 
 //Socket API for saving a response
-exports.response = function(socket) {
-  socket.on('send:response', function(data){
-    var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
-    Question.findById(data.question_id, function(err, question){
-      var choice = question.choices.id(data.choice);
-      choice.responses.push({ip:ip});
-      question.save(function(err, doc){
-        var theDoc = {
-          question: doc.question, _id: doc._id, choices: doc.choices,
-          userresponsed: false, totalresponses: 0
-        };
-        for(var i=0, ln = doc.choices.length; i < ln; i++){
-          var choice = doc.choices[i];
-          for(var j=0, jLn = choice.responses.length; j <jLn; j++){
-            var response = choice.responses[j];
-            theDoc.totalresponses++;
-            theDoc.ip = ip;
-            if(response.ip === ip){
-              theDoc.userresponsed = true;
-              theDoc.userChoice = {_id: choice._id, text: choice.text};
-            }
-          }
-        }
-      socket.emit('myresponse', theDoc);
-      socket.broadcast.emit('response', theDoc);    
-      });
-    });
-  });
+exports.response = function(socket)
+{
+	socket.on('send:response', function(data)
+	{
+		var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
+		Question.findById(data.question_id, function(err, question)
+		{
+			var choice = question.choices.id(data.choice);
+			choice.responses.push({ip:ip});
+			question.save(function(err, doc)
+			{
+				var theDoc =
+				{
+					question: doc.question,
+					_id: doc._id,
+					choices: doc.choices,
+					userresponsed: false,
+					totalresponses: 0
+				};
+				for (var i = 0, ln = doc.choices.length; i < ln; i++)
+				{
+					var choice = doc.choices[i];
+					for (var j = 0, jLn = choice.responses.length; j < jLn; j++)
+					{
+						var response = choice.responses[j];
+						theDoc.totalresponses++;
+						theDoc.ip = ip;
+						if (response.ip === ip)
+						{
+							theDoc.userresponsed = true;
+							theDoc.userChoice =
+							{
+								_id: choice._id,
+								text: choice.text
+							};
+						}
+					}
+				}
+				socket.emit('myresponse', theDoc);
+				socket.broadcast.emit('response', theDoc);
+			});
+		});
+	});
 };
