@@ -66,7 +66,7 @@ exports.create = function(req, res)
 	var reqBody = req.body,
     choices = reqBody.choices.filter(function(v)
 	{
-return v.text !== '';
+    	return v.text !== '';
     }),
     questionObj =
     {
