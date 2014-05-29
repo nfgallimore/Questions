@@ -4,12 +4,15 @@
 <form role="form" ng-submit="createQuestion()">
   <div class="form-group">
     <label for="questionQuestion">Question</label>
-    <input type="text" ng-model="question.question" class="form-control" id="questionQuestion" placeholder="Enter question question">
+    <input type="text" ng-model="question.question" class="form-control" id="questionQuestion" placeholder="Enter question">
   </div>
+  A
   <div class="form-group">
-    <label>Choices</label>
     <div ng-repeat="choice in question.choices">
-      <input type="text" ng-model="choice.text" class="form-control" placeholder="Enter choice {{$index+1}} text"><br>
+      	<form ng-model="question.correct", name="correct">
+			<input type="radio" name="correct"><font size=1>Mark as answer</font>
+		</form><br>
+      	<input type="text" ng-model="choice.text" class="form-control" placeholder="Enter choice {{$index+1}} text"><br>
     </div>
   </div>
   <div class="row">
@@ -20,7 +23,7 @@
   <p><hr></p>
   <div class="row">
     <div class="col-xs-6">
-      <a href="#/questions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span> Back to Question List</a>
+      <a href="#/questions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span> Next Question</a>
     </div>
     <div class="col-xs-6">
       <button class="btn btn-primary pull-right" type="submit">Create Question &raquo;</button>

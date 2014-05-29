@@ -67,3 +67,13 @@ function QuestionNewCtrl($scope, $location, Question) {
     }
   };
 }
+
+
+function TimerCtrl($scope, $timeout) {
+    $scope.timeInMs = 0;
+    var countUp = function() {
+        $scope.timeInMs+= 500;
+        $timeout(countUp, 500);
+    }
+    $timeout(countUp, 500);
+}
