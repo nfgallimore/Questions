@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var creds = process.env.MONGOLABS_URI;
-var db = mongoose.createConnection(creds, 'questionsapp');
+var db = mongoose.createConnection(localhost, 'questionsapp');
 var QuestionSchema = require('../models/Question.js').QuestionSchema;
 var Question = db.model('questions', QuestionSchema);
 
