@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var db = mongoose.createConnection(MONGOLAB_URI);
+var db = mongoose.createConnection("MONGOLAB_URI=mongodb://heroku_app25570769:q59d9o89lf3lb9g35bd92kbjtc@ds051788.mongolab.com:51788/heroku_app25570769");
 var QuestionSchema = require('../models/Question.js').QuestionSchema;
 var Question = db.model('questions', QuestionSchema);
 
