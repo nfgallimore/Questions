@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
-var credentials = 'mongodb://nfgallimore:Dax82wur@ds033639.mongolab.com:33639/heroku_app25784365';
-var db = mongoose.createConnection(credentials);
+var creds = process.env.MONGOLABS_URI;
+var db = mongoose.createConnection(creds, 'questionsapp');
 var QuestionSchema = require('../models/Question.js').QuestionSchema;
 var Question = db.model('questions', QuestionSchema);
 
