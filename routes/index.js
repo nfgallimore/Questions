@@ -1,8 +1,11 @@
 var mongoose = require('mongoose');
-var creds = process.env.MONGOLABS_URI;
-var db = mongoose.createConnection('localhost', 'questionsapp');
+var db = mongoose.createConnection("mongodb://heroku_app25570769:q59d9o89lf3lb9g35bd92kbjtc@ds051788.mongolab.com:51788/heroku_app25570769");
 var QuestionSchema = require('../models/Question.js').QuestionSchema;
 var Question = db.model('questions', QuestionSchema);
+
+exports.index = function(req, res) {
+  res.render('index', {title: 'Questions'});
+};
 
 // JSON API for list of questions
 exports.list = function(req, res) {
@@ -60,36 +63,28 @@ exports.question = function(req, res)
 // JSON API for creating a new question
 exports.create = function(req, res)
 {
-	var reqBody = 
-		
-		// body
-		req.body,
-		
-		// choices
-		choices = reqBody.choices.filter( function(v) { return v.text !== ''; } ),
-	    
-		// question object
-		questionObj =
-	    {
-			question: reqBody.question,
-			choices: choices
-		};
-	
-		// question
-		var question = new Question(questionObj);
-		
-		// 
-		question.save(function(err, doc)
+	var reqBody = req.body,
+    choices = reqBody.choices.filter(function(v)
+	{
+return v.text !== '';
+    }),
+    questionObj =
+    {
+		question: reqBody.question,
+		choices: choices
+	};
+	var question = new Question(questionObj);
+	question.save(function(err, doc)
+	{
+		if(err || !doc)
 		{
-			if(err || !doc)
-			{
-				throw 'Error';
-			}
-			else
-			{
-				res.json(doc);
-			}
-		});
+			throw 'Error';
+		}
+		else
+		{
+			res.json(doc);
+		}
+	});
 };
 
 //Socket API for saving a response
